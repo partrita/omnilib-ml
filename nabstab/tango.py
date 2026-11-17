@@ -1,9 +1,9 @@
 import os
 import subprocess
-from typing import Tuple, List, Dict
-import json
 from dataclasses import dataclass
+
 import pandas as pd
+
 
 @dataclass
 class TangoParams:
@@ -40,8 +40,8 @@ class NanobodyAggregationPredictor:
         self.params = TangoParams()
         
     def assemble_sequence(self, cdr1: str, cdr2: str, cdr3: str, 
-                          fw1: str = None, fw2: str = None, 
-                          fw3: str = None, fw4: str = None) -> str:
+                          fw1: str | None = None, fw2: str | None = None, 
+                          fw3: str | None = None, fw4: str | None = None) -> str:
         """
         Assemble full nanobody sequence from CDRs and framework segments
         
@@ -100,7 +100,7 @@ class NanobodyAggregationPredictor:
         ]
         return ' '.join(tango_cmd)
         
-    def calculate_region_scores(self, df: pd.DataFrame, start_idx: int, end_idx: int) -> Dict:
+    def calculate_region_scores(self, df: pd.DataFrame, start_idx: int, end_idx: int) -> dict:
         """
         Calculate aggregation metrics for a specific region
         
@@ -124,8 +124,8 @@ class NanobodyAggregationPredictor:
         }
 
     def parse_tango_output(self, output_file: str, cdr1: str, cdr2: str, cdr3: str, 
-                           fw1: str = None, fw2: str = None, 
-                           fw3: str = None, fw4: str = None) -> Dict:
+                           fw1: str | None = None, fw2: str | None = None, 
+                           fw3: str | None = None, fw4: str | None = None) -> dict:
         """
         Parse TANGO output file
         
@@ -219,7 +219,7 @@ class NanobodyAggregationPredictor:
         
         return metrics
         
-    def _find_aggregation_regions(self, df: pd.DataFrame, threshold: float = 5.0) -> List[Dict]:
+    def _find_aggregation_regions(self, df: pd.DataFrame, threshold: float = 5.0) -> list[dict]:
         """
         Identify continuous regions with aggregation propensity above threshold
         
@@ -248,8 +248,8 @@ class NanobodyAggregationPredictor:
         return regions
         
     def predict(self, cdr1: str, cdr2: str, cdr3: str, identifier: str = "nb",
-                  fw1: str = None, fw2: str = None, 
-                  fw3: str = None, fw4: str = None) -> Dict:
+                  fw1: str | None = None, fw2: str | None = None, 
+                  fw3: str | None = None, fw4: str | None = None) -> dict:
         """
         Run full prediction pipeline for a single nanobody
         
@@ -296,7 +296,7 @@ class NanobodyAggregationPredictor:
             stderr=subprocess.PIPE,
             text=True
         )
-        stdout, stderr = process.communicate()
+        _stdout, stderr = process.communicate()
         
         #print(f"Batch execution stdout:\n{stdout}")
         if stderr:

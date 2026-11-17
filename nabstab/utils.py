@@ -1,27 +1,26 @@
-from typing import Union, Tuple, List, Dict
 
-import numpy as np
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import pandas as pd
-from sklearn.metrics import roc_auc_score, roc_curve
-from tqdm import tqdm
-import matplotlib.pyplot as plt
 import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import seaborn as sns
+import torch
+from sklearn.metrics import roc_auc_score, roc_curve
+from torch import nn
+from tqdm import tqdm
 
+from nabstab.constants import AA2INDEX
 from nabstab.datasets.classifier_dataset import (
     pad_cdr2,
     pad_internal,
 )
-from nabstab.constants import AA2INDEX
 from nabstab.models.fitness_classifier import (
-    OmnilibStabilityPredictor,
+    FC,
     ConvNet,
     LinearNet,
-    FC,
+    OmnilibStabilityPredictor,
 )
+
 
 def train_epoch(model, optimizer, loader, device):
     """Train the model for one epoch on the provided data loader."""
@@ -136,10 +135,10 @@ def load_model(
 
 def test_model(
         model: torch.nn.Module,
-        test_data: Union[str, pd.DataFrame],
+        test_data: str | pd.DataFrame,
         device: torch.device,
         pad_internally: bool=True,
-        batch_size: int =256) -> Tuple[float, np.ndarray, np.ndarray]:
+        batch_size: int =256) -> tuple[float, np.ndarray, np.ndarray]:
     
     '''Test a model's classification performance on a test dataset.
     Ensure that the dataset is already balanced for the AUC to be meaningful'''
@@ -196,10 +195,10 @@ def dms_redesign(
     return np.stack(preds).squeeze()
 
 def plot_scores_lr(lrmodel: OmnilibStabilityPredictor, 
-                   sequence_tensors: List[torch.tensor], 
+                   sequence_tensors: list[torch.tensor], 
                    df: pd.DataFrame, 
                    unseen_weights: torch.tensor,
-                   names: List[str], 
+                   names: list[str], 
                    filename: str) -> None:
     
 
@@ -238,12 +237,12 @@ def plot_scores_lr(lrmodel: OmnilibStabilityPredictor,
 
 
 def plot_scores_cnn(
-        base_scores: List[torch.tensor],
-        dms_scores: List[torch.tensor],
-        sequence_tensors: List[torch.tensor],
+        base_scores: list[torch.tensor],
+        dms_scores: list[torch.tensor],
+        sequence_tensors: list[torch.tensor],
         df: pd.DataFrame,
         unseen_weights: torch.tensor,
-        names: List[str],
+        names: list[str],
         filename):
 
     fig, axs = plt.subplots(len(base_scores), 1, figsize=(15, 10*len(base_scores)))

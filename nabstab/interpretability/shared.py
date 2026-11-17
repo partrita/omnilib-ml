@@ -6,11 +6,10 @@ interpretability approaches, including the Captum model wrapper and
 sequence encoding functions.
 """
 
-from typing import Dict
 
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
+from torch import nn
 
 from nabstab.datasets.classifier_dataset import AA2INDEX, pad_cdr2, pad_internal
 from nabstab.models.fitness_classifier import OmnilibStabilityPredictor
@@ -66,7 +65,7 @@ def sequence_to_onehot(
 
 def string_to_tensor(
     sequence: str,
-    alphabet: Dict[str, int] = None
+    alphabet: dict[str, int] | None = None
 ) -> torch.Tensor:
     """
     Convert sequence string to integer tensor.

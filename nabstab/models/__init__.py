@@ -1,14 +1,14 @@
 #public API
 from nabstab.models.fitness_classifier import (
-    OmnilibStabilityPredictor,
+    FC,
     ConvNet,
     LinearNet,
-    FC,
+    OmnilibStabilityPredictor,
 )
 
 __all__ = [
-    "OmnilibStabilityPredictor",
+    "FC",
     "ConvNet",
     "LinearNet",
-    "FC",
+    "OmnilibStabilityPredictor",
 ]

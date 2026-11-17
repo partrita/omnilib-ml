@@ -40,14 +40,13 @@ import pandas as pd
 import torch
 from tqdm import tqdm
 
-from nabstab.utils import load_model
+from nabstab.constants import ALPHABET
 from nabstab.datasets.classifier_dataset import pad_cdr2, pad_internal
 from nabstab.interpretability import (
     analyze_sequence,
     compute_background_frequencies,
-    aggregate_to_position_importance,
 )
-from nabstab.constants import ALPHABET
+from nabstab.utils import load_model
 
 
 def validate_csv_columns(path: Path, required_columns: list[str], name: str) -> pd.DataFrame:
@@ -167,7 +166,7 @@ def main():
     all_predictions = get_predictions(model, all_sequences, device)
 
     # Filter by prediction class
-    filtered_sequences, filtered_predictions, filtered_indices = filter_by_prediction(
+    filtered_sequences, filtered_predictions, _filtered_indices = filter_by_prediction(
         all_sequences, all_predictions, args.prediction_class, args.threshold
     )
     print(f"Filtered to {len(filtered_sequences)} sequences with {args.prediction_class} stability "
@@ -189,7 +188,7 @@ def main():
     background_frequencies = None
     if args.baseline_type == 'frequency':
         print(f"Computing background frequencies from {args.frequency_data}")
-        freq_df = validate_csv_columns(
+        validate_csv_columns(
             Path(args.frequency_data),
             ['CDR1', 'CDR2', 'CDR3', 'stability'],
             "Frequency data"

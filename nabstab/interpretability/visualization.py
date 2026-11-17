@@ -6,23 +6,21 @@ position importance, comparison heatmaps, and SIS cluster motifs.
 """
 
 from collections import Counter
-from typing import Dict, List, Optional, Tuple
 
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import torch
-import matplotlib.pyplot as plt
-import matplotlib as mpl
 import seaborn as sns
+import torch
 
 from nabstab.constants import AA2INDEX, ALPHABET
-
 
 # =============================================================================
 # Amino Acid Color Scheme
 # =============================================================================
 
-def _hex_to_rgb(hex_color: str) -> Tuple[float, float, float]:
+def _hex_to_rgb(hex_color: str) -> tuple[float, float, float]:
     """Convert hex color to RGB (0-1 scale)."""
     hex_color = hex_color.lstrip('#')
     return tuple(int(hex_color[i:i+2], 16) / 255 for i in (0, 2, 4))
@@ -64,12 +62,12 @@ def plot_deeplift_heatmap(
     attributions: np.ndarray,
     sequence: str,
     title: str = "DeepLIFT Attributions",
-    unseen_mask: Optional[np.ndarray] = None,
-    filename: Optional[str] = None,
-    ax: Optional[plt.Axes] = None,
+    unseen_mask: np.ndarray | None = None,
+    filename: str | None = None,
+    ax: plt.Axes | None = None,
     vmin: float = -1.0,
     vmax: float = 1.0,
-    figsize: Tuple[int, int] = (15, 8),
+    figsize: tuple[int, int] = (15, 8),
     highlight_sequence: bool = True,
 ) -> plt.Figure:
     """
@@ -100,7 +98,7 @@ def plot_deeplift_heatmap(
     cmap.set_bad(color='gray')
 
     # Create heatmap
-    g = sns.heatmap(
+    sns.heatmap(
         attributions,
         ax=ax,
         cmap=cmap,
@@ -147,10 +145,10 @@ def plot_deeplift_heatmap(
 def plot_position_importance(
     position_importance: np.ndarray,
     sequence: str,
-    cdr_boundaries: Optional[Tuple[int, int]] = None,
+    cdr_boundaries: tuple[int, int] | None = None,
     title: str = "Position Importance",
-    filename: Optional[str] = None,
-    figsize: Tuple[int, int] = (15, 4),
+    filename: str | None = None,
+    figsize: tuple[int, int] = (15, 4),
 ) -> plt.Figure:
     """
     Bar plot of position-level importance with CDR region annotations.
@@ -204,13 +202,13 @@ def plot_position_importance(
 
 def plot_comparison_heatmaps(
     deeplift_attrs: np.ndarray,
-    dms_scores: Optional[np.ndarray],
-    lr_weights: Optional[np.ndarray],
+    dms_scores: np.ndarray | None,
+    lr_weights: np.ndarray | None,
     sequence: str,
     sequence_tensor: torch.Tensor,
     title_prefix: str = "",
-    filename: Optional[str] = None,
-    unseen_mask: Optional[np.ndarray] = None,
+    filename: str | None = None,
+    unseen_mask: np.ndarray | None = None,
 ) -> plt.Figure:
     """
     Side-by-side comparison of DeepLIFT, DMS, and LR interpretations.
@@ -343,7 +341,7 @@ PAGE_HEIGHT = 10.0  # inches
 
 
 def sis_sets_to_frequency_matrix(
-    sis_sets: List[List[Tuple[int, str]]],
+    sis_sets: list[list[tuple[int, str]]],
     seq_len: int = 48,
     normalize: bool = True
 ) -> pd.DataFrame:
@@ -386,13 +384,13 @@ def sis_sets_to_frequency_matrix(
 
 
 def plot_sis_logo(
-    sis_sets: List[List[Tuple[int, str]]],
+    sis_sets: list[list[tuple[int, str]]],
     seq_len: int = 48,
     title: str = "SIS Motif",
-    positions_to_show: Optional[List[int]] = None,
-    filename: Optional[str] = None,
-    figsize: Tuple[float, float] = (PAGE_WIDTH, 2.0),
-    ax: Optional[plt.Axes] = None,
+    positions_to_show: list[int] | None = None,
+    filename: str | None = None,
+    figsize: tuple[float, float] = (PAGE_WIDTH, 2.0),
+    ax: plt.Axes | None = None,
 ) -> plt.Figure:
     """
     Plot a sequence logo for SIS sets using logomaker.
@@ -441,7 +439,7 @@ def plot_sis_logo(
         fig = ax.get_figure()
 
     # Create logo
-    logo = logomaker.Logo(
+    logomaker.Logo(
         logo_df,
         ax=ax,
         color_scheme=AA_COLORS,
@@ -466,12 +464,12 @@ def plot_sis_logo(
 
 
 def plot_sis_position_frequency(
-    sis_sets: List[List[Tuple[int, str]]],
+    sis_sets: list[list[tuple[int, str]]],
     seq_len: int = 48,
-    cdr_boundaries: Tuple[int, int] = (7, 20),
+    cdr_boundaries: tuple[int, int] = (7, 20),
     title: str = "SIS Position Frequency",
-    filename: Optional[str] = None,
-    figsize: Tuple[float, float] = (PAGE_WIDTH, 2.5),
+    filename: str | None = None,
+    figsize: tuple[float, float] = (PAGE_WIDTH, 2.5),
 ) -> plt.Figure:
     """
     Bar plot showing how often each position appears in SIS sets.
@@ -531,11 +529,11 @@ def plot_sis_position_frequency(
 
 
 def plot_top_motifs(
-    motifs: List[Dict],
+    motifs: list[dict],
     n_motifs: int = 10,
     seq_len: int = 48,
-    filename: Optional[str] = None,
-    figsize: Tuple[float, float] = (PAGE_WIDTH, PAGE_HEIGHT),
+    filename: str | None = None,
+    figsize: tuple[float, float] = (PAGE_WIDTH, PAGE_HEIGHT),
 ) -> plt.Figure:
     """
     Plot sequence logos for top N motif clusters (fits on one page).
@@ -577,7 +575,7 @@ def plot_top_motifs(
             continue
 
         # Get all positions that appear in this cluster
-        positions = sorted(set(pos for pos, aa in elem_freq.keys()))
+        positions = sorted({pos for pos, aa in elem_freq})
 
         if not positions:
             ax.text(0.5, 0.5, f"Cluster {motif['cluster_id']}: No positions",
@@ -598,7 +596,7 @@ def plot_top_motifs(
         logo_df = pd.DataFrame(matrix, index=positions, columns=amino_acids)
 
         # Create logo
-        logo = logomaker.Logo(
+        logomaker.Logo(
             logo_df,
             ax=ax,
             color_scheme=AA_COLORS,
@@ -623,12 +621,12 @@ def plot_top_motifs(
 
 
 def plot_motif_heatmap(
-    motifs: List[Dict],
+    motifs: list[dict],
     seq_len: int = 48,
     n_motifs: int = 10,
     title: str = "Top Motif Positions",
-    filename: Optional[str] = None,
-    figsize: Tuple[float, float] = (PAGE_WIDTH, 5),
+    filename: str | None = None,
+    figsize: tuple[float, float] = (PAGE_WIDTH, 5),
 ) -> plt.Figure:
     """
     Heatmap showing position coverage across top motifs.

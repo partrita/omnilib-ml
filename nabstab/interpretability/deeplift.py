@@ -5,27 +5,25 @@ This module provides tools for computing DeepLIFT attributions using the
 Captum library, with support for shuffled and frequency-based baselines.
 """
 
-from typing import Dict, List, Optional, Tuple, Union
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import torch
 import torch.nn.functional as F
-
 from captum.attr import DeepLift
 
 from nabstab.constants import AA2INDEX, ALPHABET
-from nabstab.models.fitness_classifier import OmnilibStabilityPredictor
 from nabstab.interpretability.shared import (
     CaptumCNNWrapper,
     sequence_to_onehot,
     string_to_tensor,
 )
+from nabstab.models.fitness_classifier import OmnilibStabilityPredictor
 
 
 def compute_background_frequencies(
-    dataset_path: Union[str, Path],
+    dataset_path: str | Path,
     exclude_gaps: bool = True
 ) -> torch.Tensor:
     """
@@ -90,7 +88,7 @@ def create_frequency_baseline(
 def create_shuffled_baselines(
     sequence_onehot: torch.Tensor,
     n_shuffles: int = 20,
-    seed: Optional[int] = None
+    seed: int | None = None
 ) -> torch.Tensor:
     """
     Create n_shuffles random permutations of the input sequence.
@@ -134,10 +132,10 @@ def compute_deeplift_attributions(
     sequences: torch.Tensor,
     baseline_type: str = 'shuffle',
     n_shuffles: int = 20,
-    background_frequencies: Optional[torch.Tensor] = None,
+    background_frequencies: torch.Tensor | None = None,
     device: torch.device = None,
     target: int = 0,
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Compute DeepLIFT attributions for CNN model.
 
@@ -168,7 +166,7 @@ def compute_deeplift_attributions(
     inputs_onehot = sequence_to_onehot(sequences)  # (batch, 21, seq_len)
     inputs_onehot.requires_grad_(True)
 
-    batch_size, alphabet_size, seq_len = inputs_onehot.shape
+    batch_size, _alphabet_size, seq_len = inputs_onehot.shape
 
     # Initialize DeepLift
     dl = DeepLift(wrapped_model)
@@ -285,9 +283,9 @@ def analyze_sequence(
     sequence: str,
     baseline_type: str = 'shuffle',
     n_shuffles: int = 20,
-    background_frequencies: Optional[torch.Tensor] = None,
+    background_frequencies: torch.Tensor | None = None,
     device: torch.device = None,
-) -> Dict[str, np.ndarray]:
+) -> dict[str, np.ndarray]:
     """
     High-level function to analyze a single sequence.
 
@@ -344,10 +342,10 @@ def analyze_sequence(
 
 def batch_analyze(
     model: OmnilibStabilityPredictor,
-    sequences: List[str],
+    sequences: list[str],
     baseline_type: str = 'shuffle',
     n_shuffles: int = 20,
-    background_frequencies: Optional[torch.Tensor] = None,
+    background_frequencies: torch.Tensor | None = None,
     device: torch.device = None,
     batch_size: int = 16,
 ) -> pd.DataFrame:

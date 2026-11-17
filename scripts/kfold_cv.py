@@ -12,20 +12,31 @@ Tracks:
 
 import hashlib
 import json
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
 import torch
-import torch.nn as nn
-from torch.utils.data import DataLoader, Subset
 from sklearn.cluster import KMeans
 from sklearn.metrics import roc_auc_score
-import matplotlib.pyplot as plt
-import seaborn as sns
+from torch import nn
+from torch.utils.data import DataLoader, Subset
 
-from nabstab.constants import AA2INDEX, CDR1_NUMBERS_STR, CDR2_NUMBERS_STR, CDR3_NUMBERS_STR
+from nabstab.constants import (
+    AA2INDEX,
+    CDR1_NUMBERS_STR,
+    CDR2_NUMBERS_STR,
+    CDR3_NUMBERS_STR,
+)
 from nabstab.datasets.classifier_dataset import NbStabilityDataset
-from nabstab.models.fitness_classifier import OmnilibStabilityPredictor, LinearNet, ConvNet, FC
-from nabstab.utils import train_model, test_model
+from nabstab.models.fitness_classifier import (
+    FC,
+    ConvNet,
+    LinearNet,
+    OmnilibStabilityPredictor,
+)
+from nabstab.utils import test_model, train_model
 
 
 def get_hash_seed(phrase: str) -> int:
@@ -299,7 +310,7 @@ def analyze_coefficient_stability(coefficients: np.ndarray, sequence_length: int
         dict with coefficient statistics
     """
     n_folds, n_coeffs = coefficients.shape
-    alphabet_size = n_coeffs // sequence_length
+    n_coeffs // sequence_length
 
     # Compute per-position statistics
     coef_mean = coefficients.mean(axis=0)
@@ -323,7 +334,7 @@ def plot_coefficient_heatmap(
     coefficients: np.ndarray,
     sequence_length: int = 48,
     alphabet: dict = AA2INDEX,
-    output_path: str = None,
+    output_path: str | None = None,
 ):
     """
     Plot heatmap of coefficients across folds.

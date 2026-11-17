@@ -17,101 +17,100 @@ Modules:
 """
 
 # Shared utilities
-from nabstab.interpretability.shared import (
-    CaptumCNNWrapper,
-    sequence_to_onehot,
-    string_to_tensor,
-    preprocess_sequence,
-)
-
 # DeepLIFT
 from nabstab.interpretability.deeplift import (
-    compute_background_frequencies,
-    create_frequency_baseline,
-    create_shuffled_baselines,
-    compute_deeplift_attributions,
     aggregate_to_position_importance,
     aggregate_to_position_signed,
     analyze_sequence,
     batch_analyze,
+    compute_background_frequencies,
+    compute_deeplift_attributions,
+    create_frequency_baseline,
+    create_shuffled_baselines,
+)
+from nabstab.interpretability.shared import (
+    CaptumCNNWrapper,
+    preprocess_sequence,
+    sequence_to_onehot,
+    string_to_tensor,
 )
 
 # SIS analysis
 from nabstab.interpretability.sis_analysis import (
     create_sis_wrapper,
-    verify_masked_baseline,
-    run_sis_single,
-    sis_to_position_counts,
     run_sis_batch,
     run_sis_batch_with_sets,
+    run_sis_single,
+    sis_to_position_counts,
+    verify_masked_baseline,
 )
 
 # SIS clustering
 from nabstab.interpretability.sis_clustering import (
-    sis_set_to_signature,
-    exact_match_cluster,
-    jaccard_distance,
-    compute_distance_matrix,
     cluster_dbscan,
-    get_cluster_representative,
+    compute_distance_matrix,
+    exact_match_cluster,
     extract_all_motifs,
+    get_cluster_representative,
+    jaccard_distance,
+    sis_set_to_signature,
     summarize_clustering,
 )
 
 # Visualization
 from nabstab.interpretability.visualization import (
-    plot_deeplift_heatmap,
-    plot_position_importance,
-    plot_comparison_heatmaps,
     # SIS visualization
     AA_COLORS,
-    sis_sets_to_frequency_matrix,
+    plot_comparison_heatmaps,
+    plot_deeplift_heatmap,
+    plot_motif_heatmap,
+    plot_position_importance,
     plot_sis_logo,
     plot_sis_position_frequency,
     plot_top_motifs,
-    plot_motif_heatmap,
+    sis_sets_to_frequency_matrix,
 )
 
 __all__ = [
+    # SIS visualization
+    'AA_COLORS',
     # Shared
     'CaptumCNNWrapper',
-    'sequence_to_onehot',
-    'string_to_tensor',
-    'preprocess_sequence',
-    # DeepLIFT
-    'compute_background_frequencies',
-    'create_frequency_baseline',
-    'create_shuffled_baselines',
-    'compute_deeplift_attributions',
     'aggregate_to_position_importance',
     'aggregate_to_position_signed',
     'analyze_sequence',
     'batch_analyze',
+    'cluster_dbscan',
+    # DeepLIFT
+    'compute_background_frequencies',
+    'compute_deeplift_attributions',
+    'compute_distance_matrix',
+    'create_frequency_baseline',
+    'create_shuffled_baselines',
     # SIS analysis
     'create_sis_wrapper',
-    'verify_masked_baseline',
-    'run_sis_single',
-    'sis_to_position_counts',
-    'run_sis_batch',
-    'run_sis_batch_with_sets',
-    # SIS clustering
-    'sis_set_to_signature',
     'exact_match_cluster',
-    'jaccard_distance',
-    'compute_distance_matrix',
-    'cluster_dbscan',
-    'get_cluster_representative',
     'extract_all_motifs',
-    'summarize_clustering',
+    'get_cluster_representative',
+    'jaccard_distance',
+    'plot_comparison_heatmaps',
     # Visualization
     'plot_deeplift_heatmap',
+    'plot_motif_heatmap',
     'plot_position_importance',
-    'plot_comparison_heatmaps',
-    # SIS visualization
-    'AA_COLORS',
-    'sis_sets_to_frequency_matrix',
     'plot_sis_logo',
     'plot_sis_position_frequency',
     'plot_top_motifs',
-    'plot_motif_heatmap',
+    'preprocess_sequence',
+    'run_sis_batch',
+    'run_sis_batch_with_sets',
+    'run_sis_single',
+    'sequence_to_onehot',
+    # SIS clustering
+    'sis_set_to_signature',
+    'sis_sets_to_frequency_matrix',
+    'sis_to_position_counts',
+    'string_to_tensor',
+    'summarize_clustering',
+    'verify_masked_baseline',
 ]

@@ -5,18 +5,17 @@ This module provides wrapper functions for applying the SIS algorithm
 to our nanobody stability prediction models.
 """
 
-from typing import Dict, List, Tuple
 
 import numpy as np
 import torch
 
-from nabstab.models.fitness_classifier import OmnilibStabilityPredictor
+from nabstab.interpretability import sis
 from nabstab.interpretability.shared import (
     CaptumCNNWrapper,
     sequence_to_onehot,
     string_to_tensor,
 )
-from nabstab.interpretability import sis
+from nabstab.models.fitness_classifier import OmnilibStabilityPredictor
 
 
 def create_sis_wrapper(
@@ -112,7 +111,7 @@ def run_sis_single(
     sequence_onehot: np.ndarray,
     threshold: float,
     device: torch.device = None
-) -> List[sis.SISResult]:
+) -> list[sis.SISResult]:
     """
     Run SIS on a single sequence.
 
@@ -155,8 +154,8 @@ def run_sis_single(
 
 def sis_to_position_counts(
     sequence_onehot: np.ndarray,
-    sis_collection: List[sis.SISResult]
-) -> Tuple[np.ndarray, Dict[Tuple[int, int], int]]:
+    sis_collection: list[sis.SISResult]
+) -> tuple[np.ndarray, dict[tuple[int, int], int]]:
     """
     Convert SIS results to position and AA-position counts.
 
@@ -188,11 +187,11 @@ def sis_to_position_counts(
 
 def run_sis_batch(
     model: OmnilibStabilityPredictor,
-    sequences: List[str],
+    sequences: list[str],
     threshold: float,
     device: torch.device = None,
     verbose: bool = True
-) -> Dict[str, Tuple[np.ndarray, Dict]]:
+) -> dict[str, tuple[np.ndarray, dict]]:
     """
     Run SIS on multiple sequences.
 
@@ -230,11 +229,11 @@ def run_sis_batch(
 
 def run_sis_batch_with_sets(
     model: OmnilibStabilityPredictor,
-    sequences: List[str],
+    sequences: list[str],
     threshold: float,
     device: torch.device = None,
     verbose: bool = True
-) -> Dict[str, List[List[Tuple[int, str]]]]:
+) -> dict[str, list[list[tuple[int, str]]]]:
     """
     Run SIS on multiple sequences and return raw SIS sets.
 

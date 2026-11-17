@@ -1,4 +1,3 @@
-# coding=utf-8
 # Copyright 2025 The Google Research Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -68,11 +67,9 @@ References:
     arXiv preprint arXiv:1810.03805. https://arxiv.org/abs/1810.03805
 """
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import collections
+
 import numpy as np
 
 
@@ -234,10 +231,10 @@ def _assert_sis_collection_disjoint(collection):
   """
   all_seen_idxs = set()
   for sis_result in collection:
-    sis_idxs = set((tuple(idx) for idx in sis_result.sis))
+    sis_idxs = {tuple(idx) for idx in sis_result.sis}
     if all_seen_idxs.intersection(sis_idxs):
       raise AssertionError(
-          'SIS-collection is not disjoint. Got: %s' % (str(collection)))
+          f'SIS-collection is not disjoint. Got: {collection!s}')
     all_seen_idxs.update(sis_idxs)
 
 

@@ -10,15 +10,13 @@ Two clustering approaches are supported:
 """
 
 from collections import Counter, defaultdict
-from typing import Dict, List, Set, Tuple
 
 import numpy as np
 from sklearn.cluster import DBSCAN
 
-
 # Type aliases for clarity
-SISSet = List[Tuple[int, str]]  # List of (position, amino_acid) tuples
-SISSignature = Tuple[Tuple[int, str], ...]  # Hashable version
+SISSet = list[tuple[int, str]]  # List of (position, amino_acid) tuples
+SISSignature = tuple[tuple[int, str], ...]  # Hashable version
 
 
 def sis_set_to_signature(sis_set: SISSet) -> SISSignature:
@@ -35,7 +33,7 @@ def sis_set_to_signature(sis_set: SISSet) -> SISSignature:
 
 
 def exact_match_cluster(
-    all_sis_sets: List[SISSet]
+    all_sis_sets: list[SISSet]
 ) -> Counter:
     """
     Group identical SIS sets and count occurrences.
@@ -57,8 +55,8 @@ def exact_match_cluster(
 
 
 def jaccard_distance(
-    set_a: Set[Tuple[int, str]],
-    set_b: Set[Tuple[int, str]]
+    set_a: set[tuple[int, str]],
+    set_b: set[tuple[int, str]]
 ) -> float:
     """
     Compute Jaccard distance between two SIS sets.
@@ -82,7 +80,7 @@ def jaccard_distance(
     return 1.0 - (intersection / union)
 
 
-def compute_distance_matrix(sis_sets: List[SISSet]) -> np.ndarray:
+def compute_distance_matrix(sis_sets: list[SISSet]) -> np.ndarray:
     """
     Compute pairwise Jaccard distance matrix for SIS sets.
 
@@ -106,10 +104,10 @@ def compute_distance_matrix(sis_sets: List[SISSet]) -> np.ndarray:
 
 
 def cluster_dbscan(
-    sis_sets: List[SISSet],
+    sis_sets: list[SISSet],
     eps: float = 0.3,
     min_samples: int = 2
-) -> Tuple[np.ndarray, Dict[int, List[int]]]:
+) -> tuple[np.ndarray, dict[int, list[int]]]:
     """
     Cluster SIS sets using DBSCAN with precomputed Jaccard distances.
 
@@ -141,10 +139,10 @@ def cluster_dbscan(
 
 
 def get_cluster_representative(
-    cluster_indices: List[int],
-    sis_sets: List[SISSet],
+    cluster_indices: list[int],
+    sis_sets: list[SISSet],
     frequency_threshold: float = 0.5
-) -> Tuple[SISSet, Dict[Tuple[int, str], int]]:
+) -> tuple[SISSet, dict[tuple[int, str], int]]:
     """
     Extract representative motif from a cluster of SIS sets.
 
@@ -163,7 +161,7 @@ def get_cluster_representative(
             - representative: List of (position, aa) tuples forming the consensus motif
             - element_frequencies: Dict mapping each (position, aa) -> count in cluster
     """
-    element_frequencies: Dict[Tuple[int, str], int] = Counter()
+    element_frequencies: dict[tuple[int, str], int] = Counter()
 
     for idx in cluster_indices:
         for pos_aa in sis_sets[idx]:
@@ -181,11 +179,11 @@ def get_cluster_representative(
 
 
 def extract_all_motifs(
-    sis_sets: List[SISSet],
+    sis_sets: list[SISSet],
     labels: np.ndarray,
-    clusters: Dict[int, List[int]],
+    clusters: dict[int, list[int]],
     frequency_threshold: float = 0.5
-) -> List[Dict]:
+) -> list[dict]:
     """
     Extract motif information from all clusters.
 
@@ -229,8 +227,8 @@ def extract_all_motifs(
 
 def summarize_clustering(
     labels: np.ndarray,
-    clusters: Dict[int, List[int]]
-) -> Dict:
+    clusters: dict[int, list[int]]
+) -> dict:
     """
     Generate summary statistics for clustering results.
 
@@ -241,7 +239,7 @@ def summarize_clustering(
     Returns:
         Dict with summary statistics
     """
-    n_clusters = len([c for c in clusters.keys() if c != -1])
+    n_clusters = len([c for c in clusters if c != -1])
     n_noise = len(clusters.get(-1, []))
     n_total = len(labels)
     n_clustered = n_total - n_noise

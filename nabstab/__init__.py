@@ -1,5 +1,5 @@
 try:
-    import torch
+    import torch  # noqa: F401
 except ImportError:
     raise ImportError(
         "PyTorch is required but not installed. Please install it first:\n"

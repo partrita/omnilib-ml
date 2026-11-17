@@ -24,23 +24,23 @@ import argparse
 import json
 from pathlib import Path
 
-import torch
 import pandas as pd
+import torch
 
-from nabstab.utils import load_model
 from nabstab.datasets.classifier_dataset import pad_cdr2, pad_internal
 from nabstab.interpretability import (
-    verify_masked_baseline,
-    run_sis_batch_with_sets,
-    exact_match_cluster,
     cluster_dbscan,
+    exact_match_cluster,
     extract_all_motifs,
-    summarize_clustering,
+    plot_motif_heatmap,
     # Visualization
     plot_sis_position_frequency,
     plot_top_motifs,
-    plot_motif_heatmap,
+    run_sis_batch_with_sets,
+    summarize_clustering,
+    verify_masked_baseline,
 )
+from nabstab.utils import load_model
 
 
 def format_signature_for_json(sig):

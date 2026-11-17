@@ -1,37 +1,27 @@
-import os
-from pathlib import Path
 import logging
+import os
 import time
-from typing import List
 
-import pandas as pd
+log = logging.getLogger(__name__)
+
 import numpy as np
-import seaborn as sns
-from Bio import SeqIO
+import pandas as pd
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
 from antpack import SingleChainAnnotator
-
-from nabstab.datasets.classifier_dataset import (
-    pad_cdr2,
-    pad_internal,
-    NbStabilityDataset
-)
+from Bio import SeqIO
+from torch import nn
 
 from nabstab.constants import (
     AA2INDEX,
     CDR1_NUMBERS_STR,
     CDR2_NUMBERS_STR,
-    CDR3_NUMBERS_STR
+    CDR3_NUMBERS_STR,
 )
-
-from nabstab.utils import (
-    load_model,
-    plot_scores_cnn,
-    plot_scores_lr,
-    dms_redesign
+from nabstab.datasets.classifier_dataset import (
+    pad_cdr2,
+    pad_internal,
 )
+from nabstab.utils import load_model
 
 
 def load_data_for_scoring(
@@ -63,7 +53,7 @@ def load_data_for_scoring(
 
     for seq_id, seq in seqs.items():
         results = annotator.analyze_seq(seq)
-        labels = annotator.assign_cdr_labels(results[0], results[2])
+        annotator.assign_cdr_labels(results[0], results[2])
         cdr1 = [aa for aa,idx in zip(seq, results[0]) if idx in cdr1_numbers]
         cdr2 = [aa for aa,idx in zip(seq, results[0]) if idx in cdr2_numbers]
         cdr3 = [aa for aa,idx in zip(seq, results[0]) if idx in cdr3_numbers]
@@ -93,8 +83,8 @@ def load_data_for_scoring(
     return df
 
 def evaluate_fitness_scores(
-        models: List[nn.Module],
-        model_names: List[str],
+        models: list[nn.Module],
+        model_names: list[str],
         sequences: pd.DataFrame,
         device: torch.device,
         alphabet: dict = AA2INDEX,
@@ -137,7 +127,7 @@ def evaluate_fitness_scores(
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    logging.info("Starting fitness score evaluation...")
+    log.info("Starting fitness score evaluation...")
 
     import argparse
     parser = argparse.ArgumentParser(description="Evaluate fitness scores for sequences using trained models.")
@@ -158,7 +148,7 @@ if __name__ == "__main__":
     # Load sequences from FASTA file
     sequences = load_data_for_scoring(args.fasta_file)
 
-    logging.info(f"Loaded {len(sequences)} sequences from {args.fasta_file}")
+    log.info(f"Loaded {len(sequences)} sequences from {args.fasta_file}")
     time_start = time.time()
 
     # Load models
@@ -172,7 +162,7 @@ if __name__ == "__main__":
         )
 
         all_models.append(model)
-    logging.info(f"Loaded {len(all_models)} models for evaluation.")
+    log.info(f"Loaded {len(all_models)} models for evaluation.")
 
     # Evaluate fitness scores
     sequences_with_scores = evaluate_fitness_scores(
@@ -191,7 +181,7 @@ if __name__ == "__main__":
     sequences_with_scores.to_csv(output_file, index=False)
 
     time_end = time.time()
-    logging.info(f"Evaluation completed in {time_end - time_start:.2f} seconds.")
+    log.info(f"Evaluation completed in {time_end - time_start:.2f} seconds.")
 
-    logging.info(f"Fitness scores saved to {output_file}")
-    logging.info("Fitness score evaluation completed.")
+    log.info(f"Fitness scores saved to {output_file}")
+    log.info("Fitness score evaluation completed.")

@@ -1,9 +1,6 @@
-from functools import partial
 import pandas as pd
-import numpy as np
-
 import torch
-from torch.utils.data import Dataset, random_split
+from torch.utils.data import Dataset
 
 from nabstab.constants import AA2INDEX
 

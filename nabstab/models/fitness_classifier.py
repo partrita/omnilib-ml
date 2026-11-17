@@ -1,15 +1,12 @@
-import math
-from typing import Optional
 
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
-import torch.optim as optim
-import numpy as np
+from torch import nn, optim
+
 
 class OmnilibStabilityPredictor(nn.Module):
     def __init__(self, alphabet, feature_extractor=None, classifier=None):
-        super(OmnilibStabilityPredictor, self).__init__()
+        super().__init__()
 
         self.alphabet = alphabet
         assert feature_extractor is not None and classifier is not None, "Feature extractor and classifier must be specified"

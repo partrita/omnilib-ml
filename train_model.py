@@ -1,22 +1,17 @@
-import os
 import logging
-from typing import Optional
+import os
 import time
 
-import torch
-import torch.nn as nn
-import pandas as pd
-from torch.utils.data import DataLoader
-from torch.utils.data import random_split
+log = logging.getLogger(__name__)
 
-from nabstab.models import (
-    OmnilibStabilityPredictor,
-    LinearNet,
-    ConvNet,
-    FC
-)
-from nabstab.datasets.classifier_dataset import NbStabilityDataset
+import pandas as pd
+import torch
+from torch import nn
+from torch.utils.data import DataLoader, random_split
+
 from nabstab.constants import AA2INDEX
+from nabstab.datasets.classifier_dataset import NbStabilityDataset
+from nabstab.models import FC, ConvNet, LinearNet, OmnilibStabilityPredictor
 from nabstab.utils import train_model
 
 
@@ -43,7 +38,7 @@ def create_cnn_model(
         dim: int = 24,
         ks1: int = 5,
         ks2: int = 9,
-        h_dim: Optional[int] = 8
+        h_dim: int | None = 8
 ):
     """
     Create a CNN model for classifying nanobody stability.
@@ -118,7 +113,7 @@ if __name__ == "__main__":
 
     #setup logging
     logging.basicConfig(level=logging.INFO)
-    logging.info(f"Training on device: {args.device}")
+    log.info(f"Training on device: {args.device}")
 
     # Load training and validation datasets
     train_df = pd.read_csv(args.train_data_path)
@@ -137,8 +132,8 @@ if __name__ == "__main__":
     train_loader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True)
     val_loader = DataLoader(val_ds, batch_size=args.batch_size, shuffle=False)
 
-    logging.info(f"Loaded {len(train_ds)} training samples")
-    logging.info(f"Loaded {len(val_ds)} validation samples")
+    log.info(f"Loaded {len(train_ds)} training samples")
+    log.info(f"Loaded {len(val_ds)} validation samples")
 
     # Create model
     if args.model_type == "lr":
@@ -157,7 +152,7 @@ if __name__ == "__main__":
     model.to(args.device)
     optimizer = model.configure_optimizers(lr=args.learning_rate, wd=args.weight_decay)
 
-    logging.info(f"Model created: {args.model_type} with {sum(p.numel() for p in model.parameters() if p.requires_grad)} trainable parameters")
+    log.info(f"Model created: {args.model_type} with {sum(p.numel() for p in model.parameters() if p.requires_grad)} trainable parameters")
 
     start_time = time.time()
 
@@ -172,7 +167,7 @@ if __name__ == "__main__":
     )
 
     end_time = time.time()
-    logging.info(f"Training completed in {end_time - start_time:.2f} seconds.")
+    log.info(f"Training completed in {end_time - start_time:.2f} seconds.")
 
     #save the model
     if args.model_type == "lr":
@@ -207,6 +202,6 @@ if __name__ == "__main__":
     output_file = os.path.join(args.save_model_path, model_save_name)
     torch.save(save_dict, output_file)
 
-    logging.info(f"Model saved to {output_file}")
-    logging.info(f"Final validation loss: {final_val_loss:.4f}, accuracy: {final_val_acc:.4f}")
-    logging.info("Training complete.")
+    log.info(f"Model saved to {output_file}")
+    log.info(f"Final validation loss: {final_val_loss:.4f}, accuracy: {final_val_acc:.4f}")
+    log.info("Training complete.")

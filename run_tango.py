@@ -1,16 +1,13 @@
-import os
 import argparse
-from datetime import datetime
-from functools import partial
-import multiprocessing as mp
 import logging
+import os
+from datetime import datetime
 
-from tqdm import tqdm
 import pandas as pd
+from tqdm import tqdm
 
-from nabstab.tango import (
-    NanobodyAggregationPredictor
-)
+from nabstab.tango import NanobodyAggregationPredictor
+
 
 def setup_logger(output_dir):
     """Set up logger to write to both console and file."""
@@ -66,7 +63,7 @@ def process_row(row, predictor, logger):
             normalized_score = result['normalized_agg_score']
             return [max_agg, mean_agg, agg_regions, total_score, normalized_score, stability]
     except Exception as e:
-        logger.error(f"Error processing sequence {row.name}: {cdr1}, {cdr2}, {cdr3} - {str(e)}")
+        logger.error(f"Error processing sequence {row.name}: {cdr1}, {cdr2}, {cdr3} - {e!s}")
     
     return None
 
