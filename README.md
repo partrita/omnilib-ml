@@ -54,16 +54,8 @@ pixi run python -m pip install -e .
 Then, either package install:
 
 ```bash
-pip install -e .
+pixi run python -m pip install -e .
 ```
-
-or local (notebook style):
-
-```bash
-pip install -r requirements.txt
-```
-
-Note that the `requirements.txt` file includes the versions that we used during development, but it's likely that more recent versions of the packages will work as well. Using pixi ensures reproducible environments with exact dependency versions from conda-forge.
 
 ## Data
 
