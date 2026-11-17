@@ -20,13 +20,6 @@ We used torch 2.2.0, but more recent versions should also work.
 Since the models we trained are fairly small, the CPU version should still be very efficient.
 
 ```bash
-# for CPU only installation
-pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-
-# -OR- Cuda 11.8 and 2.2.0 (what we used)
-pip install torch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 --index-url https://download.pytorch.org/whl/cu118
-
-# -OR- (more recent)
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
 ```
 
@@ -41,14 +34,11 @@ curl -L https://pixi.sh/install.sh | bash
 # Create a new environment with the specified Python version and dependencies
 pixi create
 
-# Activate the environment
-pixi activate
-
-# Alternatively, install dependencies directly
-pixi install
-
-# Or use the environment directly
+# Use the environment - either via pixi run or pixi shell
 pixi run python -m pip install -e .
+
+# Or start an interactive shell
+pixi shell
 ```
 
 Then, either package install:
