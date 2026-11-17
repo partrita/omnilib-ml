@@ -1,0 +1,8 @@
+Metadata-Version: 2.4
+Name: nbfitnessml
+Version: 0.1
+License-File: LICENSE.txt
+Provides-Extra: dev
+Requires-Dist: notebook; extra == "dev"
+Dynamic: license-file
+Dynamic: provides-extra

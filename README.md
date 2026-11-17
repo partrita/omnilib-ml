@@ -54,9 +54,8 @@ pixi create
 # Run Python with the environment's Python interpreter
 pixi run python -m pip install -e .
 
-# Or run scripts directly
+# Or run scripts directly (using full path within pixi shell)
 pixi run python scripts/train_lr.sh
-# pixi run bash scripts/train_lr.sh
 ```
 
 #### Method 3: One-step environment creation and package install
