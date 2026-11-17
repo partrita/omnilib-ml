@@ -5,3 +5,5 @@ figures/__pycache__/*
 # pixi environments
 .pixi/*
 !.pixi/config.toml
+# Python package metadata
+nbfitnessml.egg-info/*
