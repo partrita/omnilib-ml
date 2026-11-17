@@ -27,24 +27,68 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
 
 [Pixi](https://pixi.sh/) is a modern package manager that replaces conda and pip for managing Python/Rust dependencies. It creates isolated environments using conda-forge packages.
 
+#### Method 1: Full Environment Setup (Recommended)
+
 ```bash
 # Install pixi (if not already installed)
 curl -L https://pixi.sh/install.sh | bash
 
-# Create a new environment with the specified Python version and dependencies
+# Create and enter the environment
 pixi create
 
-# Use the environment - either via pixi run or pixi shell
-pixi run python -m pip install -e .
-
-# Or start an interactive shell
+# Start a shell with all dependencies activated
 pixi shell
+
+# Inside the shell, install the package in editable mode
+pip install -e .
+# Or run scripts directly
+python scripts/train_lr.sh
 ```
 
-Then, either package install:
+#### Method 2: Using pixi run
 
 ```bash
+# Create environment
+pixi create
+
+# Run Python with the environment's Python interpreter
 pixi run python -m pip install -e .
+
+# Or run scripts directly
+pixi run python scripts/train_lr.sh
+# pixi run bash scripts/train_lr.sh
+```
+
+#### Method 3: One-step environment creation and package install
+
+```bash
+# Create environment and immediately install package
+pixi create && pixi shell -- pip install -e .
+```
+
+#### Method 4: Without pixi (fallback)
+
+If pixi is not available, use the traditional approach:
+
+```bash
+# Create a conda environment
+conda create -n omnilib python=3.10.15 -y
+
+# Activate it
+conda activate omnilib
+
+# Install PyTorch (choose one based on your setup)
+# CPU version
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+# Or CUDA 11.8 + PyTorch 2.2.0
+# pip install torch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 --index-url https://download.pytorch.org/whl/cu118
+
+# Install package dependencies
+pip install -r requirements.txt
+
+# Or install from this repository
+pip install -e .
 ```
 
 ## Data
