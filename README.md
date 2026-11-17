@@ -30,6 +30,27 @@ pip install torch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 --index-url https
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
 ```
 
+### Using pixi (recommended)
+
+[Pixi](https://pixi.sh/) is a modern package manager that replaces conda and pip for managing Python/Rust dependencies. It creates isolated environments using conda-forge packages.
+
+```bash
+# Install pixi (if not already installed)
+curl -L https://pixi.sh/install.sh | bash
+
+# Create a new environment with the specified Python version and dependencies
+pixi create
+
+# Activate the environment
+pixi activate
+
+# Alternatively, install dependencies directly
+pixi install
+
+# Or use the environment directly
+pixi run python -m pip install -e .
+```
+
 Then, either package install:
 
 ```bash
@@ -42,7 +63,7 @@ or local (notebook style):
 pip install -r requirements.txt
 ```
 
-Note that the `requirements.txt` file includes the versions that we used during development, but it's likely that more recent versions of the packages will work as well.
+Note that the `requirements.txt` file includes the versions that we used during development, but it's likely that more recent versions of the packages will work as well. Using pixi ensures reproducible environments with exact dependency versions from conda-forge.
 
 ## Data
 

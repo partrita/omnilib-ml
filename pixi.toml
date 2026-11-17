@@ -1,0 +1,26 @@
+[project]
+name = "omnilib-ml"
+description = "Official repository for the paper Hypervariable loop profiling decodes sequence determinants of antibody stability."
+requires_python = ">=3.8"
+
+[dependencies]
+numpy = "==1.24.0"
+pandas = "==1.5.3"
+scikit-learn = "==1.2.2"
+matplotlib = "==3.10.5"
+seaborn = "==0.13.2"
+notebook = "==7.4.5"
+biopython = "==1.85"
+levenshtein = "==0.27.1"
+logomaker = "==0.8.7"
+antpack = "==0.3.8.6"
+captum = "==0.8.0"
+
+[channels]
+conda-forge = "*"
+
+[features]
+default = ["python"]
+
+[sources]
+python = "3.10.15"
