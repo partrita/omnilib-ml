@@ -2,3 +2,6 @@ data/*
 *.ipynb
 nabstab/__pycache__/*
 figures/__pycache__/*
+# pixi environments
+.pixi/*
+!.pixi/config.toml
