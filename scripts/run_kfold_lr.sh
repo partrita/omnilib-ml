@@ -4,9 +4,8 @@
 
 set -e
 
-# Activate conda environment
-source /home/akoehl/miniconda3/etc/profile.d/conda.sh
-conda activate omnilib-stability
+# Use pixi-activated Python if available, otherwise use system Python
+which pixi && eval "$(pixi env activate)" || true
 
 # Create output directory
 mkdir -p data/kfold
